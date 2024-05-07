@@ -9,52 +9,52 @@ gdf = gdf.merge(detalles, on='ESTACION', how='left')
 
 # Dictionary mapping station names to image paths
 station_to_original_image = {
-    'ACEVEDO': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Originales/Acevedo.png',
-    'AGUACATALA': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Originales/Aguacatala.png',
-    'AYURA': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Originales/Ayura.png',
-    'BELLO': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Originales/Bello.png',
-    'CARIBE': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Originales/Caribe.png',
-    'CISNEROS': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Originales/Cisneros.png',
-    'ENVIGADO': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Originales/Envigado.png',
-    'ESTADIO': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Originales/Estadio.png',
-    'FLORESTA': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Originales/Floresta.png',
-    'HOSPITAL': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Originales/Hospital.png',
-    'INDUSTRIALES': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Originales/Industriales.png',
-    'ITAGUÍ': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Originales/Itaguí.png',
-    'MADERA': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Originales/Madera.png',
-    'PARQUE BERRÍO': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Originales/Parque_Berrío.png',
-    'POBLADO': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Originales/Poblado.png',
-    'PRADO': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Originales/Prado.png',
-    'SAN ANTONIO': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Originales/San_Antonio_B.png',
-    'SAN JAVIER': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Originales/San_Javier.png',
-    'SURAMERICANA': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Originales/Suramericana.png',
-    'TRICENTENARIO': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Originales/Tricentenario.png',
-    'UNIVERSIDAD': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Originales/Universidad.png'
+    'ACEVEDO': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Originales/Acevedo.png',
+    'AGUACATALA': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Originales/Aguacatala.png',
+    'AYURA': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Originales/Ayura.png',
+    'BELLO': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Originales/Bello.png',
+    'CARIBE': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Originales/Caribe.png',
+    'CISNEROS': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Originales/Cisneros.png',
+    'ENVIGADO': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Originales/Envigado.png',
+    'ESTADIO': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Originales/Estadio.png',
+    'FLORESTA': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Originales/Floresta.png',
+    'HOSPITAL': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Originales/Hospital.png',
+    'INDUSTRIALES': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Originales/Industriales.png',
+    'ITAGUÍ': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Originales/Itaguí.png',
+    'MADERA': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Originales/Madera.png',
+    'PARQUE BERRÍO': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Originales/Parque_Berrío.png',
+    'POBLADO': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Originales/Poblado.png',
+    'PRADO': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Originales/Prado.png',
+    'SAN ANTONIO': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Originales/San_Antonio_B.png',
+    'SAN JAVIER': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Originales/San_Javier.png',
+    'SURAMERICANA': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Originales/Suramericana.png',
+    'TRICENTENARIO': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Originales/Tricentenario.png',
+    'UNIVERSIDAD': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Originales/Universidad.png'
     # Add more stations and image paths as needed
 }
 
 station_to_image = {
-    'ACEVEDO': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Procesadas/Acevedo.png',
-    'AGUACATALA': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Procesadas/Aguacatala.png',
-    'AYURA': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Procesadas/Ayura.png',
-    'BELLO': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Procesadas/Bello.png',
-    'CARIBE': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Procesadas/Caribe.png',
-    'CISNEROS': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Procesadas/Cisneros.png',
-    'ENVIGADO': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Procesadas/Envigado.png',
-    'ESTADIO': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Procesadas/Estadio.png',
-    'FLORESTA': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Procesadas/Floresta.png',
-    'HOSPITAL': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Procesadas/Hospital.png',
-    'INDUSTRIALES': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Procesadas/Industriales.png',
-    'ITAGUÍ': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Procesadas/Itaguí.png',
-    'MADERA': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Procesadas/Madera.png',
-    'PARQUE BERRÍO': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Procesadas/Parque Berrío.png',
-    'POBLADO': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Procesadas/Poblado.png',
-    'PRADO': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Procesadas/Prado.png',
-    'SAN ANTONIO': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Procesadas/San Antonio B.png',
-    'SAN JAVIER': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Procesadas/San Javier.png',
-    'SURAMERICANA': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Procesadas/Suramericana.png',
-    'TRICENTENARIO': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Procesadas/Tricentenario.png',
-    'UNIVERSIDAD': '/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Vírgenes/Procesadas/Universidad.png'
+    'ACEVEDO': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Procesadas/Acevedo.png?raw=true',
+    'AGUACATALA': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Procesadas/Aguacatala.png?raw=true',
+    'AYURA': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Procesadas/Ayura.png?raw=true',
+    'BELLO': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Procesadas/Bello.png',
+    'CARIBE': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Procesadas/Caribe.png',
+    'CISNEROS': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Procesadas/Cisneros.png',
+    'ENVIGADO': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Procesadas/Envigado.png',
+    'ESTADIO': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Procesadas/Estadio.png',
+    'FLORESTA': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Procesadas/Floresta.png',
+    'HOSPITAL': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Procesadas/Hospital.png',
+    'INDUSTRIALES': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Procesadas/Industriales.png',
+    'ITAGUÍ': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Procesadas/Itaguí.png',
+    'MADERA': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Procesadas/Madera.png',
+    'PARQUE BERRÍO': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Procesadas/Parque Berrío.png',
+    'POBLADO': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Procesadas/Poblado.png',
+    'PRADO': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Procesadas/Prado.png',
+    'SAN ANTONIO': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Procesadas/San Antonio B.png',
+    'SAN JAVIER': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Procesadas/San Javier.png',
+    'SURAMERICANA': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Procesadas/Suramericana.png',
+    'TRICENTENARIO': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Procesadas/Tricentenario.png',
+    'UNIVERSIDAD': 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes/Procesadas/Universidad.png'
     # Add more stations and image paths as needed
 }
 
@@ -83,7 +83,7 @@ for _, row in gdf.iterrows():
         folium.Marker(
             location=[row.geometry.y, row.geometry.x],
             #marker_size = (32,32),
-            icon=folium.CustomIcon(icon_url, icon_size=(None, 40)),
+            icon=folium.CustomIcon(icon_url, icon_size=(25, None)),
             tooltip= f'<b>{row["ESTACION"]}</b><br>',
             popup=f'<div style="width: 200px; padding-top:0px; padding-bottom:0px">'
                 #f'<b>{row["ESTACION"]}</b><br>'
@@ -111,4 +111,4 @@ for _, row in gdf.iterrows():
 # Show map
 
 
-m.save('/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/virgenes_metro.html')
+m.save('../index.html')

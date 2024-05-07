@@ -84,7 +84,7 @@ for _, row in gdf.iterrows():
             location=[row.geometry.y, row.geometry.x],
             #marker_size = (32,32),
             icon=folium.CustomIcon(icon_url, icon_size=(25, None)),
-            tooltip= f'<b>{row["ESTACION"]}</b><br>',
+            tooltip= f'<b>{row["Nombre_estación"]}</b><br>',
             popup=f'<div style="width: 200px; padding-top:0px; padding-bottom:0px">'
                 #f'<b>{row["ESTACION"]}</b><br>'
                 f'<div style="text-align:center; margin-bottom:0ptx; padding-top:0px; padding-bottom:0px"><b>{row["ESTACION"]}</b></div><br>'
@@ -111,4 +111,4 @@ for _, row in gdf.iterrows():
 # Show map
 
 
-m.save('../index.html')
+m.save('../virgenes_MDE.html')

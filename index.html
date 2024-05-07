@@ -4,19 +4,99 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa de las vírgenes del metro de Medellín</title>
+     <!-- CSS styles -->
+    <style>
+        body {
+            font-family: Georama, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #map-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        #map-text {
+            text-align: left;
+            margin-top: 20px;
+            color: #666;
+            margin-top: 20px;
+            margin-right: 150px;
+            margin-left: 150px;
+        }
+
+        #intro-text {
+            text-align: left;
+            margin-top: 20px;
+            color: #666;
+            margin-right: 150px;
+            margin-left: 150px;
+            margin-bottom: 0px;
+
+        }
+
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        /* Style the popup */
+        .leaflet-popup-content-wrapper {
+            background-color: #fff !important;
+            color: #333 !important;
+            padding: 10px !important;
+            border-radius: 5px !important;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        /* Style the popup close button */
+        .leaflet-popup-close-button {
+            font-family: Georama, sans-serif;
+            top: 5px !important;
+            right: 5px !important;
+            color: #999 !important;
+        }
+
+        /* Style the tooltip */
+        .leaflet-tooltip {
+            font-family: Georama, sans-serif;
+            background-color: #333 !important;
+            color: #fff !important;
+            padding: 5px 10px !important;
+            border-radius: 5px !important;
+            font-size: 12px !important;
+        }
+
+    </style>
 </head>
 <body>
-    <h1>Embedded Folium Map</h1>
+    <h1>Las Vírgenes del Metro</h1>
+    <div id="intro-text">
+        <p>El área de Cultura del Metro de Medellín facilitó al Instituto Edgelands información sobre el proyecto de arte público Las Vírgenes del Metro. El Instituto Edgelands produjo este mapa en retribución a tal atención, esperando que sea de servicio y agrado a la ciudadanía. El texto a continuación es parte de la información compartida.</p>
+    </div>
     <!-- Use an iframe to embed the Folium map HTML file -->
-    <iframe src="virgenes_MDE.html" width="800" height="600" frameborder="0"></iframe>
+    <div id="map-container">
+        <iframe src="virgenes_MDE.html" frameborder="0"></iframe>
+    </div>
+    <div id="map-text">
     <p>Museo Metro
-        Propuesta de guion para la Galería de Arte Público, serie Las vírgenes del Metro
-        Introducción
-        La fé mueve vagones fue el nombre de una de las campañas que el Metro de Medellín desarrolló, de la mano del Banco Industrial Colombiano (BIC), entre 1988 y 1995, siete años antes de la inauguración del Metro, construyendo cimientos de confianza con la ciudadanía que ayudaron a mantener el sueño intacto, en medio de grandes dificultades económicas que la Empresa debió afrontar.
-        Fueron los primeros años de la Cultura Metro, una propuesta educativa y de gestión social y cultural con la que fue posible aportar al sentido de pertenencia por lo propio, a la cohesión social y a la creación de nuevos imaginarios que le brindaron la posibilidad de reinvención a una ciudad que estaba sitiada por la violencia del narcotráfico.
-        
+        Fueron los primeros años de la Cultura Metro, una propuesta educativa y de gestión social y cultural con la que fue posible aportar al sentido de pertenencia por lo propio, a la cohesión social y a la creación de nuevos imaginarios que le brindaron la posibilidad de reinvención a una ciudad que estaba sitiada por la violencia del narcotráfico. 
+        <br>  
+        <br>
         En ese entorno de crisis social y económica, el proyecto Metro de Medellín ayudó a recobrar la confianza y el primer vagón que comenzó a rodar no fue por obra de la ingeniería, sino de la cultura, y en ese vagón viajaron juntos: ciudadanía, sociedad civil, empresa privada y gobierno.
-        
+        <br>
+        <br>
         La estrategia de la Cultura Metro fue mantener un diálogo constante con la ciudad,
         desde la primera campaña Quiere el Metro nuestra gran obra (1988), hasta Por
         tenaces lo logramos (1995), se apalancó el empoderamiento ciudadano que había
@@ -24,7 +104,8 @@
         nivel personal como social, comprendiendo que las acciones transformadoras
         ocurren si se gestan desde la base de la sociedad. La obra del Metro abrió múltiples
         caminos, mostrando que otra ciudad era posible y que era posible vivir en ella.
-        
+        <br>
+        <br>
         Ante este contexto, el Metro de Medellín comprendió que la vida se protegía si la
         sociedad permanecía unida, y que el mayor blindaje que podía tener la
         infraestructura pública, en permanente amenaza, era el acompañamiento social. Y
@@ -37,6 +118,8 @@
         obras para la devoción, sino para la admiración, aun así, no fueron indiferentes ante
         críticas que expresaban que Colombia había sido reconocido como un país laico en
         su reciente Constitución.
+        <br>
+        <br>
         La curaduría estuvo encomendada al pintor, ilustrador y diseñador Humberto Pérez,
         quien expresó en su momento la importancia que tendrían las obras como
         protección a la infraestructura, no por efectos sobrenaturales, sino por el respeto a
@@ -48,6 +131,8 @@
         Gutiérrez, Rafael Sáenz, Libardo Ruiz, José Ignacio Vélez, Lucía Sánchez, Rommel
         Toro, Fernando Acosta, Carlos Acosta, Raúl Álvarez, Gabriel Ripoll Jaramillo y
         María Lucía Vélez.
+        <br>
+        <br>
         Esta Galería de Arte Público está disponible para el disfrute de toda la ciudadanía,
         pues no es necesario ingresar al sistema para apreciar las obras. Quien decida
         hacer un recorrido por las obras va a encontrar diversas advocaciones de la virgen,
@@ -55,15 +140,22 @@
         juguetona, plasmadas a través de distintas técnicas, entre las que se destacan:
         murales al fresco, mosaico, relieve en cemento, acrílico sobre lienzo, grabado en
         metal, cerámica, óleo sobre madera, entre otros.
+        <br>
+        <br>
         Recorrer la ciudad a través de sus obras de arte, es hacer un recorrido histórico en
         el que se pueden conocer los valores simbólicos de cada sociedad; y aunque el arte
         sigue siendo fundamental para la apropiación social de la nueva infraestructura que
         construye el Metro, hoy los temas son otros, y se suman al patrimonio artístico y
         cultural que el Metro de Medellín tiene para el disfrute de todos los usuarios y sus
         distintos públicos de interés.
+        <br>
+        <br>
         Carlos Mario Jiménez H.
+        <br>
         Área de Gestión Social
+        <br>
         Metro de Medellín </p>
+    </div>
 </body>
 </html>
 

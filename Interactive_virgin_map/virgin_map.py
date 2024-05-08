@@ -1,6 +1,9 @@
 import geopandas as gpd
 import folium
 import pandas as pd
+from PIL import Image
+import requests
+from io import BytesIO
 
 # Load shapefile
 gdf = gpd.read_file('/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Lineas_metro/Lineas_metro.shp')
@@ -58,6 +61,19 @@ station_to_image = {
     # Add more stations and image paths as needed
 }
 
+
+icon_width = 30
+def calculate_icon_height(icon_width, icon_url):
+    response = requests.get(icon_url)
+    # Open the image from the downloaded content
+    with Image.open(BytesIO(response.content)) as img:
+        # Get the width and height of the image
+        width, height = img.size
+        # Calculate the aspect ratio
+        aspect_ratio = width / height
+        icon_height = icon_width/aspect_ratio
+        return icon_height
+
 # Initialize map centered at median coordinates with a "sober" basemap
 map_center = [gdf.geometry.y.median(), gdf.geometry.x.median()]
 m = folium.Map(location=map_center, zoom_start=12, tiles='Stamen Terrain', attr='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, Imagery © <a href="http://stamen.com">Stamen Design</a>')
@@ -79,11 +95,12 @@ for _, row in gdf.iterrows():
     icon_url = station_to_image.get(station, None)
     original_image_path = station_to_original_image.get(station, None)
     if icon_url:
+        icon_height = calculate_icon_height(icon_width,icon_url)
 # Add marker with custom icon and hover information
         folium.Marker(
             location=[row.geometry.y, row.geometry.x],
             #marker_size = (32,32),
-            icon=folium.CustomIcon(icon_url, icon_size=(25, None)),
+            icon=folium.CustomIcon(icon_url, icon_size=(icon_width, icon_height)),
             tooltip= f'<b>{row["Nombre_estación"]}</b><br>',
             popup=f'<div style="width: 200px; padding-top:0px; padding-bottom:0px">'
                 #f'<b>{row["ESTACION"]}</b><br>'
@@ -111,4 +128,4 @@ for _, row in gdf.iterrows():
 # Show map
 
 
-m.save('../virgenes_MDE.html')
+m.save('virgenes_MDE.html')

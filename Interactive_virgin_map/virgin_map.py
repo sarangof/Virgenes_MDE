@@ -78,7 +78,8 @@ def calculate_icon_height(icon_width, icon_url):
 map_center = [gdf.geometry.y.median(), gdf.geometry.x.median()]
 m = folium.Map(location=map_center, zoom_start=12, tiles='Stamen Terrain', attr='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, Imagery © <a href="http://stamen.com">Stamen Design</a>')
 
-lineas_transporte = gpd.read_file('/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Corredores_para_Transporte_de_Pasajeros/Corredores_para_Transporte_de_Pasajeros.shp')        
+lineas_transporte = gpd.read_file('https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Corredores_para_Transporte_de_Pasajeros/Corredores_para_Transporte_de_Pasajeros.shp')        
+
 folium.GeoJson(
     lineas_transporte,
         style_function=lambda feature: {

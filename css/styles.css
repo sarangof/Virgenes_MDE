@@ -1,24 +1,30 @@
 /* Define @font-face rule for Georama font */
 @font-face {
     font-family: 'Georama';
-    src: url('../fonts/georama-Light.ttf') format('truetype'),
-    url('../fonts/georama-Italic.ttf') format('truetype'),
-        url('../fonts/georama-Bold.ttf') format('truetype');
-    /* Add additional font formats if necessary */
-}
-
-/* Define @font-face rule for Georama font */
+    src: url('../fonts/georama-Light.ttf') format('truetype');
+    font-weight: 300; /* Specify the font weight (light) */
+    font-style: normal; /* Specify the font style (normal) */
+  }
+  
 @font-face {
-font-family: 'Georama';
-src: url('georama.woff2') format('woff2'), /* Specify the path to the font files */
-        url('georama.woff') format('woff');
-/* Add additional font formats if necessary */
-}
+    font-family: 'Georama';
+    src: url('../fonts/georama-Italic.ttf') format('truetype');
+    font-weight: normal; /* Specify the font weight (normal) */
+    font-style: italic; /* Specify the font style (italic) */
+  }
+  
+@font-face {
+    font-family: 'Georama';
+    src: url('../fonts/georama-Bold.ttf') format('truetype');
+    font-weight: bold; /* Specify the font weight (bold) */
+    font-style: normal; /* Specify the font style (normal) */
+  }
+  
 
 /* Custom styles */
 body {
     padding: 20px;
-    font-family: 'Georama', Arial, sans-serif; /* Use Georama font as fallback */
+    font-family: 'Georama',sans-serif; /* Use Georama font as fallback */
 }
 /* Example of custom styling for headers */
 h1.ui.header {

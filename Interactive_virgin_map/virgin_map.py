@@ -7,7 +7,7 @@ from io import BytesIO
 
 # Load shapefile
 gdf = gpd.read_file('/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Lineas_metro/Lineas_metro.shp')
-detalles = pd.read_csv('/Users/sarangof/Documents/Personal/Edgelands/Art_visualizations/Virgenes_MDE/Virgenes_detalles.csv',sep=';')
+detalles = pd.read_csv('https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/Virgenes_detalles.csv',sep=';')
 gdf = gdf.merge(detalles, on='ESTACION', how='left')
 
 # Dictionary mapping station names to image paths

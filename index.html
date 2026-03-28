@@ -1,53 +1,451 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <meta charset="utf-8">
-  <title>Las Vírgenes del Metro de Medellín</title>
-  <!-- Link to Semantic UI stylesheet -->
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
-   <!-- Link to your custom CSS -->
-  <link rel="stylesheet" type="text/css" href="css/styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Las Vírgenes del Metro de Medellín</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Georama for body, Georama Condensed for titles (Dunbar Low Bold approximation) -->
+<link href="https://fonts.googleapis.com/css2?family=Georama:wght@300;400;500;600;700&family=Georama+Condensed:wght@600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --black: #1a1a1a; --white: #fafaf8; --cream: #f4f1ec;
+    --green: #00c853; --green-dark: #00a344; --green-muted: #b8e6c8;
+    --gray-light: #e8e5e0; --gray-mid: #999; --gray-dark: #555; --text: #2c2c2c;
+    --font-body: 'Georama', sans-serif;
+  }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body); font-weight: 400;
+    color: var(--text); background: var(--white);
+    line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+
+  /*
+   * Title style: Georama Condensed at weight 700.
+   * Narrow geometric uppercase approximating Dunbar Low Bold.
+   */
+  .title-font {
+    font-family: 'Georama Condensed', 'Georama', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    line-height: 1.15;
+  }
+
+  .page-wrapper { max-width: 1200px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 60px); }
+
+  header {
+    padding: 40px 0 0; display: flex; align-items: center;
+    justify-content: space-between; flex-wrap: wrap; gap: 16px;
+  }
+  .logo-link img { height: 32px; width: auto; display: block; }
+  .header-label {
+    font-size: 0.75rem; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray-mid);
+  }
+
+  .hero { padding: 60px 0 40px; border-bottom: 1px solid var(--gray-light); }
+  .hero h1 { font-size: clamp(2.2rem, 5.5vw, 4rem); margin-bottom: 20px; color: var(--black); }
+  .hero .subtitle {
+    font-size: clamp(1rem, 2vw, 1.2rem); font-weight: 300;
+    color: var(--gray-dark); max-width: 720px; line-height: 1.7;
+  }
+  .hero .subtitle a {
+    color: var(--green-dark); text-decoration: none;
+    border-bottom: 1px solid var(--green-muted); transition: border-color 0.2s;
+  }
+  .hero .subtitle a:hover { border-color: var(--green-dark); }
+
+  .map-section { padding: 48px 0 0; }
+  .map-section h2 { font-size: clamp(0.8rem, 1.4vw, 1rem); margin-bottom: 20px; color: var(--gray-mid); }
+  .map-container {
+    width: 100%; height: 600px; border-radius: 4px;
+    overflow: hidden; border: 1px solid var(--gray-light);
+  }
+  #map { width: 100%; height: 100%; }
+
+  /* Leaflet popup */
+  .leaflet-popup-content-wrapper {
+    border-radius: 6px !important;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.18) !important;
+    padding: 0 !important;
+    font-family: var(--font-body) !important;
+    overflow: hidden;
+  }
+  .leaflet-popup-content { margin: 0 !important; width: 300px !important; }
+  .leaflet-popup-tip { box-shadow: none !important; }
+  .popup-image-wrap {
+    width: 100%; background: #f0ede8;
+    text-align: center; padding: 14px 14px 6px;
+    border-bottom: 1px solid var(--gray-light);
+  }
+  .popup-image-wrap img {
+    max-width: 100%; max-height: 200px;
+    object-fit: contain; border-radius: 2px; cursor: zoom-in;
+  }
+  .popup-inner { padding: 14px 18px 18px; }
+  .popup-inner .popup-station {
+    font-family: 'Georama Condensed', 'Georama', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    font-size: 0.72rem; color: var(--green-dark); margin-bottom: 3px;
+  }
+  .popup-inner .popup-title {
+    font-weight: 700; font-size: 1rem;
+    color: var(--black); line-height: 1.3; margin-bottom: 8px;
+  }
+  .popup-inner .popup-meta {
+    font-size: 0.8rem; color: var(--gray-dark); line-height: 1.5; margin-bottom: 6px;
+  }
+  .popup-inner .popup-meta strong { font-weight: 600; color: var(--text); }
+  .popup-inner .popup-detail {
+    font-size: 0.8rem; color: var(--gray-mid); line-height: 1.5;
+    border-top: 1px solid var(--gray-light); padding-top: 8px; margin-top: 4px;
+  }
+
+  /* Map icon: rounded rectangle */
+  .virgin-icon-marker {
+    background: var(--white); border: 2px solid rgba(255,255,255,0.95);
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.28), 0 0 0 1px rgba(0,0,0,0.06);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .virgin-icon-marker:hover {
+    transform: scale(1.2);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.35), 0 0 0 1px rgba(0,0,0,0.08);
+    z-index: 9999 !important;
+  }
+  .virgin-icon-marker img {
+    width: 100%; height: 100%; object-fit: contain; display: block;
+  }
+
+  /* List */
+  .list-section { padding: 56px 0 0; }
+  .list-section h2 { font-size: clamp(0.8rem, 1.4vw, 1rem); margin-bottom: 24px; color: var(--gray-mid); }
+  .virgin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1px; background: var(--gray-light);
+    border: 1px solid var(--gray-light); border-radius: 4px; overflow: hidden;
+  }
+  .virgin-card {
+    background: var(--white); padding: 16px 20px;
+    cursor: pointer; transition: background 0.2s;
+    display: flex; gap: 14px; align-items: center;
+  }
+  .virgin-card:hover { background: var(--cream); }
+  .card-thumb {
+    width: 40px; height: 56px; border-radius: 4px;
+    overflow: hidden; flex-shrink: 0;
+    background: #f0ede8; border: 1px solid var(--gray-light);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .card-thumb img { width: 100%; height: 100%; object-fit: contain; }
+  .card-info { flex: 1; min-width: 0; position: relative; }
+  .card-info .card-station {
+    font-family: 'Georama Condensed', 'Georama', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    font-size: 0.66rem; color: var(--green-dark); margin-bottom: 1px;
+  }
+  .card-info .card-title {
+    font-weight: 700; font-size: 0.88rem;
+    color: var(--black); line-height: 1.3; margin-bottom: 3px;
+  }
+  .card-info .card-artist {
+    font-size: 0.76rem; color: var(--gray-dark);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .card-year {
+    font-size: 0.7rem; font-weight: 600; color: var(--gray-mid);
+    position: absolute; top: 0; right: 0;
+  }
+
+  /* Text */
+  .text-section { padding: 56px 0 40px; }
+  .text-section h2 { font-size: clamp(0.8rem, 1.4vw, 1rem); margin-bottom: 24px; color: var(--gray-mid); }
+  .text-columns {
+    column-count: 2; column-gap: 48px;
+    font-size: 0.92rem; line-height: 1.75; color: var(--gray-dark);
+  }
+  .text-columns p { margin-bottom: 16px; break-inside: avoid; }
+  .text-columns .author { font-weight: 600; color: var(--text); font-size: 0.85rem; margin-top: 8px; }
+
+  footer {
+    padding: 40px 0; border-top: 1px solid var(--gray-light);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+  }
+  footer .footer-text { font-size: 0.75rem; color: var(--gray-mid); }
+  footer a {
+    color: var(--green-dark); text-decoration: none;
+    border-bottom: 1px solid transparent; transition: border-color 0.2s;
+  }
+  footer a:hover { border-color: var(--green-dark); }
+
+  @media (max-width: 768px) {
+    .text-columns { column-count: 1; }
+    .map-container { height: 480px; }
+    .virgin-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .map-container { height: 400px; }
+    .hero h1 { font-size: 1.6rem; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-in { animation: fadeUp 0.6s ease-out forwards; }
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.2s; }
+  .delay-3 { animation-delay: 0.35s; }
+
+  .lightbox-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(20,20,20,0.88); z-index: 10000;
+    align-items: center; justify-content: center; cursor: pointer;
+  }
+  .lightbox-overlay.active { display: flex; }
+  .lightbox-overlay img {
+    max-width: 90vw; max-height: 85vh;
+    object-fit: contain; border-radius: 4px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  }
+</style>
 </head>
 <body>
-  <!-- Logo container -->
 
-  <div class="ui container">
-    <div class="logo-container">
-      <img src="https://raw.githubusercontent.com/sarangof/Virgenes_MDE/main/logo/1linelightgreenb.png" alt="Logo" class="logo">
+<div class="page-wrapper">
+  <header>
+    <a href="https://www.edgelands.institute/" target="_blank" rel="noopener" class="logo-link">
+      <img src="https://cdn.prod.website-files.com/62155c778ad62ee5dbbe646f/6283e659276b88ee7973e0dc_horizontal_black.webp" alt="Edgelands Institute">
+    </a>
+    <span class="header-label">Proyecto de datos</span>
+  </header>
+
+  <section class="hero">
+    <h1 class="title-font animate-in">Las Vírgenes del Metro de Medellín</h1>
+    <p class="subtitle animate-in delay-1">Mapa de las representaciones artísticas de la Virgen María en las estaciones del Metro de Medellín. El área de Cultura del Metro facilitó al <a href="https://www.edgelands.institute/" target="_blank" rel="noopener">Instituto Edgelands</a> información sobre el proyecto de arte público. El Instituto Edgelands produjo este mapa en retribución, esperando que sea de servicio y agrado a la ciudadanía.</p>
+  </section>
+
+  <section class="map-section animate-in delay-2">
+    <h2 class="title-font">MAPA INTERACTIVO</h2>
+    <div class="map-container">
+      <div id="map"></div>
     </div>
-    <!-- Title -->
-    <h1 class="ui header">Las Vírgenes del Metro de Medellín</h1>
-    
-    <!-- Introductory Text -->
-        <p>El área de Cultura del Metro de Medellín facilitó al <a href="https://www.edgelands.institute/">Instituto Edgelands</a> información sobre el proyecto de arte público Las Vírgenes del Metro. El Instituto Edgelands produjo este mapa en retribución a tal atención, esperando que sea de servicio y agrado a la ciudadanía. El texto a continuación es parte de la información compartida.</p>
-    
-    <!-- Iframe -->
-    <div class="ui segment">
-    <!--   <h2 class="ui header">Embedded Content</h2> -->
-      <iframe src="virgenes_MDE.html"></iframe>
+  </section>
+
+  <section class="list-section animate-in delay-3">
+    <h2 class="title-font">LAS 23 VÍRGENES</h2>
+    <div class="virgin-grid" id="virgin-grid"></div>
+  </section>
+
+  <section class="text-section">
+    <h2 class="title-font">CONTEXTO</h2>
+    <div class="text-columns">
+      <p>Fueron los primeros años de la Cultura Metro, una propuesta educativa y de gestión social y cultural con la que fue posible aportar al sentido de pertenencia por lo propio, a la cohesión social y a la creación de nuevos imaginarios que le brindaron la posibilidad de reinvención a una ciudad que estaba sitiada por la violencia del narcotráfico.</p>
+      <p>En ese entorno de crisis social y económica, el proyecto Metro de Medellín ayudó a recobrar la confianza y el primer vagón que comenzó a rodar no fue por obra de la ingeniería, sino de la cultura, y en ese vagón viajaron juntos: ciudadanía, sociedad civil, empresa privada y gobierno.</p>
+      <p>Ante este contexto, el Metro de Medellín comprendió que la vida se protegía si la sociedad permanecía unida, y que el mayor blindaje que podía tener la infraestructura pública era el acompañamiento social. Y para generar apropiación e identificación cultural, el Metro construyó un proyecto expositivo de obras de arte en las estaciones del sistema. Las primeras cuatro obras fueron instaladas en el año 1996, dando inicio a la serie que más tarde se conocería con el nombre de Las Vírgenes del Metro, que hoy suman veintidós.</p>
+      <p>La curaduría estuvo encomendada al pintor, ilustrador y diseñador Humberto Pérez, quien expresó la importancia que tendrían las obras como protección a la infraestructura, no por efectos sobrenaturales, sino por el respeto a la imagen de la Virgen.</p>
+      <p>Esta Galería de Arte Público está disponible para el disfrute de toda la ciudadanía, pues no es necesario ingresar al sistema para apreciar las obras. Quien decida hacer un recorrido va a encontrar diversas advocaciones de la Virgen, con una representación cultural cercana a nuestra realidad, plasmadas a través de distintas técnicas: murales al fresco, mosaico, relieve en cemento, acrílico sobre lienzo, grabado en metal, cerámica, óleo sobre madera, entre otros.</p>
+      <p class="author">Carlos Mario Jiménez H.<br>Área de Gestión Social · Metro de Medellín</p>
     </div>
-    
-    <!-- More In-depth Text -->
-    <div class="ui segment">
-          <!-- <h2 class="ui header">More In-depth Text</h2> -->
-      <p>Museo Metro Fueron los primeros años de la Cultura Metro, una propuesta educativa y de gestión social y cultural con la que fue posible aportar al sentido de pertenencia por lo propio, a la cohesión social y a la creación de nuevos imaginarios que le brindaron la posibilidad de reinvención a una ciudad que estaba sitiada por la violencia del narcotráfico. </p>
+  </section>
 
-        <p>En ese entorno de crisis social y económica, el proyecto Metro de Medellín ayudó a recobrar la confianza y el primer vagón que comenzó a rodar no fue por obra de la ingeniería, sino de la cultura, y en ese vagón viajaron juntos: ciudadanía, sociedad civil, empresa privada y gobierno.</p>
+  <footer>
+    <span class="footer-text">Producido por <a href="https://www.edgelands.institute/" target="_blank" rel="noopener">Edgelands Institute</a> · Con información del Área de Cultura, Metro de Medellín</span>
+    <span class="footer-text">2024</span>
+  </footer>
+</div>
 
-        <p>La estrategia de la Cultura Metro fue mantener un diálogo constante con la ciudad, desde la primera campaña Quiere el Metro nuestra gran obra (1988), hasta Por tenaces lo logramos (1995), se apalancó el empoderamiento ciudadano que había surgido de forma natural por una obra que estaba significando esperanza tanto a nivel personal como social, comprendiendo que las acciones transformadoras ocurren si se gestan desde la base de la sociedad. La obra del Metro abrió múltiples caminos, mostrando que otra ciudad era posible y que era posible vivir en ella.</p>
+<div class="lightbox-overlay" id="lightbox" onclick="this.classList.remove('active')">
+  <img id="lightbox-img" src="" alt="">
+</div>
 
-        <p>Ante este contexto, el Metro de Medellín comprendió que la vida se protegía si la sociedad permanecía unida, y que el mayor blindaje que podía tener la infraestructura pública, en permanente amenaza, era el acompañamiento social. Y para generar apropiación e identificación cultural, el Metro construyó un proyecto expositivo de obras de arte en las estaciones del sistema y de su entorno inmediato. Las primeras cuatro obras fueron instaladas en el año 1996, dando inicio a la serie que más tarde se conocería con el nombre de Las vírgenes del Metro, que hoy suman veintidós. La instalación de obras de esta temática estuvo condicionada por su valor simbólico para la sociedad antioqueña. No se trataba de una exposición de obras para la devoción, sino para la admiración, aun así, no fueron indiferentes ante críticas que expresaban que Colombia había sido reconocido como un país laico en su reciente Constitución.</p>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+var REPO = 'https://raw.githubusercontent.com/sarangof/Virgenes_MDE/master';
+var PROC = REPO + '/Virgenes/Procesadas';
+var ORIG = REPO + '/Virgenes/Originales';
 
-        <p>La curaduría estuvo encomendada al pintor, ilustrador y diseñador Humberto Pérez, quien expresó en su momento la importancia que tendrían las obras como protección a la infraestructura, no por efectos sobrenaturales, sino por el respeto a la imagen de la virgen. Humberto Pérez invitó a distintos artistas a participar del proyecto con producciones originales y gestionó los permisos de reproducción de otras obras existentes. En esta Galería de Arte se pueden apreciar obras de artistas como: Ethel Gilmour, Débora Arango, Jorge Rojas, Enrique Grau, Rodrigo Isaza, Fernando Botero, Oscar Jaramillo, Eduardo Toro, Luis Fernando Peláez, Olga Lucía Gutiérrez, Rafael Sáenz, Libardo Ruiz, José Ignacio Vélez, Lucía Sánchez, Rommel Toro, Fernando Acosta, Carlos Acosta, Raúl Álvarez, Gabriel Ripoll Jaramillo y María Lucía Vélez.</p>
+var virgenes = [
+  { id:"itagui", est:"Itagüí", tit:"Virgen María Auxiliadora", art:"Libardo Ruíz Velásquez (repr. de Ethel Gilmour)", tec:"Acrílico sobre lienzo", y:1996, det:"Dicha obra se instaló allí por ser el Metro un medio de transporte para llegar al Santuario de María Auxiliadora en Sabaneta.", lat:6.1632, lng:-75.5967, iP:"Itagu%C3%AD.png", iO:"Itagu%C3%AD.png", ord:1 },
+  { id:"envigado", est:"Envigado", tit:"Nuestra Señora del Silencio", art:"Francisco Eduardo Toro Betancur (repr. de Débora Arango Pérez)", tec:"Mosaico", y:2004, det:"Nuestra Señora del Silencio no es una representación de una virgen sino de una matrona invitando al silencio y al acogimiento.", lat:6.1723, lng:-75.5899, iP:"Envigado.png", iO:"Envigado.png", ord:2 },
+  { id:"ayura", est:"Ayurá", tit:"Niña María", art:"Humberto Pérez Tobón", tec:"Mural al fresco", y:1998, det:"La imagen contiene la siguiente inscripción: «La Niña María. Se cuenta que más tarde dio a la luz la luz del universo.»", lat:6.1824, lng:-75.5851, iP:"Ayura.png", iO:"Ayura.png", ord:3 },
+  { id:"aguacatala", est:"Aguacatala", tit:"Virgen del Buen Consejo", art:"Jorge Rojas", tec:"Mosaico", y:2008, det:"La obra contiene una inscripción en latín que traduce «Santísima Madre del Buen Consejo, ruega por nosotros a tu hijo, Jesús».", lat:6.1949, lng:-75.5795, iP:"Aguacatala.png", iO:"Aguacatala.png", ord:4 },
+  { id:"poblado", est:"Poblado", tit:"Virgen de la Popa", art:"Francisco Eduardo Toro Betancur (repr. de Enrique Grau Araújo)", tec:"Mosaico", y:1996, det:"La Popa es el cerro más elevado de Cartagena, tierra del artista Grau.", lat:6.2104, lng:-75.5757, iP:"Poblado.png", iO:"Poblado.png", ord:5 },
+  { id:"industriales", est:"Industriales", tit:"Virgen de Fátima", art:"Rodrigo Isaza Uribe", tec:"Relieve en cemento", y:1996, det:"En el sector Occidental de la estación se encuentra el río Medellín, el cerro Nutibara y el barrio Fátima que tiene una iglesia consagrada a la Virgen de Fátima.", lat:6.2337, lng:-75.5823, iP:"Industriales.png", iO:"Industriales.png", ord:6 },
+  { id:"sanantonio", est:"San Antonio", tit:"Virgen de Nuestra Señora de Colombia", art:"Libardo Ruíz Velásquez (repr. de Fernando Botero)", tec:"Acrílico sobre lienzo", y:1998, det:"Abajo aparecen los rostros de los piadosos donantes de la obra, similar a las obras de arte religiosas del siglo XV.", lat:6.2472, lng:-75.5700, iP:"San%20Antonio%20B.png", iO:"San_Antonio_B.png", ord:7 },
+  { id:"sanantonioa", est:"San Antonio (Línea B)", tit:"Virgen Nuestra Señora de la Dolorosa", art:"Oscar Jaramillo", tec:"Fotograbado en metal", y:1999, det:"Inicialmente la obra fue ubicada en Parque Berrío pero, por razones técnicas, fue trasladada al interior de la estación San Antonio.", lat:6.2468, lng:-75.5708, iP:"San%20Antonio%20B.png", iO:"San_Antonio_B.png", ord:8 },
+  { id:"parqueberrio", est:"Parque Berrío", tit:"Virgen Nuestra Señora de la Candelaria", art:"Francisco Eduardo Toro Betancur", tec:"Mosaico en teselas", y:1997, det:"Con un brazo la virgen sostiene la candela. La obra tiene como alusión geográfica la iglesia de La Candelaria y las aguas del río Medellín.", lat:6.2512, lng:-75.5648, iP:"Parque%20Berr%C3%ADo.png", iO:"Parque_Berr%C3%ADo.png", ord:9 },
+  { id:"prado", est:"Prado", tit:"Virgen de la Asunción", art:"Luis Pernando Peláez", tec:"Fotograbado en metal", y:1998, det:"", lat:6.2617, lng:-75.5676, iP:"Prado.png", iO:"Prado.png", ord:10 },
+  { id:"hospital", est:"Hospital", tit:"Virgen Nuestra Señora de Guadalupe", art:"Mario Sierra (repr. de Olga Lucía Gutiérrez Velásquez)", tec:"Mosaico", y:1997, det:"", lat:6.2562, lng:-75.5757, iP:"Hospital.png", iO:"Hospital.png", ord:11 },
+  { id:"universidad", est:"Universidad", tit:"Anunciación", art:"Rafael Sáenz, reproducción por Marco Aurelio Sáenz", tec:"Mural al fresco", y:1997, det:"La obra, por medio de pinceladas onduladas, manifiesta un acontecimiento en un instante fugaz.", lat:6.2654, lng:-75.5677, iP:"Universidad.png", iO:"Universidad.png", ord:12 },
+  { id:"tricentenario", est:"Tricentenario", tit:"Virgen de la Leche", art:"José Ignacio Vélez", tec:"Mosaico", y:1999, det:"El tema pictórico hace referencia al entorno de la estación. A su costado oriental está el río Medellín y sus vegas donde pastó el ganado lechero. Cerca se encuentra Colanta quien patrocinó la obra.", lat:6.2875, lng:-75.5623, iP:"Tricentenario.png", iO:"Tricentenario.png", ord:13 },
+  { id:"caribe", est:"Caribe", tit:"Virgen de la Milagrosa", art:"Libardo Ruíz Velásquez", tec:"Acrílico sobre lienzo", y:1996, det:"En la parte inferior del cuadro se ven las montañas y cerros que se pueden contemplar desde la estación.", lat:6.2727, lng:-75.5692, iP:"Caribe.png", iO:"Caribe.png", ord:14 },
+  { id:"acevedo", est:"Acevedo", tit:"Virgen de la Visitación", art:"Lucía Sánchez", tec:"Mosaico", y:1997, det:"Su entorno lo conforman el río Medellín y en su ladera barrios que en la obra se ven representados.", lat:6.2997, lng:-75.5596, iP:"Acevedo.png", iO:"Acevedo.png", ord:15 },
+  { id:"madera", est:"Madera", tit:"Virgen Nuestra Señora de Chiquinquirá", art:"Rommel Toro Carvajal", tec:"Mosaico", y:1996, det:"En segundo plano el tricolor nacional. El cuadro posee inscripciones como: «ayúdanos a cambiar y a mejorar nuestra vida y entorno».", lat:6.3163, lng:-75.5575, iP:"Madera.png", iO:"Madera.png", ord:16 },
+  { id:"bello", est:"Bello", tit:"Virgen del Rosario", art:"Fernando Acosta Ochoa", tec:"Mixta sobre madera", y:1997, det:"Se aprecian elementos como el cerro Quitasol y las vegas del río Medellín. La Virgen del Rosario es la patrona de Bello.", lat:6.3373, lng:-75.5559, iP:"Bello.png", iO:"Bello.png", ord:17 },
+  // Línea B
+  { id:"cisneros", est:"Cisneros", tit:"La Virgen de la Montaña", art:"Marta Lucía Vélez", tec:"Mosaico", y:1997, det:"La imagen de la virgen es tomada de La Virgen de la Granada, de Botticelli.", lat:6.2584, lng:-75.5715, iP:"Cisneros.png", iO:"Cisneros.png", ord:18 },
+  { id:"suramericana", est:"Suramericana", tit:"Virgen Nuestra Señora de la Macarena", art:"Gabriel Ripoll", tec:"Mosaico", y:1997, det:"Al oriente de la estación se encuentra la otrora Plaza de Toros la Macarena, ahora centro de espectáculos La Macarena.", lat:6.2394, lng:-75.5862, iP:"Suramericana.png", iO:"Suramericana.png", ord:19 },
+  { id:"estadio", est:"Estadio", tit:"Virgen del Perpetuo Socorro", art:"Raúl Álvarez Mejía", tec:"Mosaico", y:1996, det:"La virgen sostiene con su mano derecha un balón y con la izquierda al niño Jesús, a quien le cuelga un guayo de uno de sus pies.", lat:6.2449, lng:-75.5897, iP:"Estadio.png", iO:"Estadio.png", ord:20 },
+  { id:"floresta", est:"Floresta", tit:"Virgen Nuestra Señora de los Dolores", art:"Carlos Acosta", tec:"Mosaico", y:1996, det:"Compuesto por teselas de baldosín, vidrio, oro y plata falsa.", lat:6.2533, lng:-75.5808, iP:"Floresta.png", iO:"Floresta.png", ord:21 },
+  { id:"sanjavier", est:"San Javier", tit:"Virgen del Carmen Señora del Santo Escapulario", art:"José Antonio Arcos", tec:"Vitral", y:2008, det:"", lat:6.2568, lng:-75.6158, iP:"San%20Javier.png", iO:"San_Javier.png", ord:22 }
+];
 
-        <p> Esta Galería de Arte Público está disponible para el disfrute de toda la ciudadanía, pues no es necesario ingresar al sistema para apreciar las obras. Quien decida hacer un recorrido por las obras va a encontrar diversas advocaciones de la virgen, con una representación cultural cercana a nuestra realidad y en algunos casos juguetona, plasmadas a través de distintas técnicas, entre las que se destacan: murales al fresco, mosaico, relieve en cemento, acrílico sobre lienzo, grabado en metal, cerámica, óleo sobre madera, entre otros. </p>
+// Sort by metro line order
+virgenes.sort(function(a,b){ return a.ord - b.ord; });
 
-        <p> Recorrer la ciudad a través de sus obras de arte, es hacer un recorrido histórico en el que se pueden conocer los valores simbólicos de cada sociedad; y aunque el arte sigue siendo fundamental para la apropiación social de la nueva infraestructura que construye el Metro, hoy los temas son otros, y se suman al patrimonio artístico y cultural que el Metro de Medellín tiene para el disfrute de todos los usuarios y sus distintos públicos de interés. </p>
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('active');
+}
 
-        <p>Carlos Mario Jiménez H.<br>
-        Área de Gestión Social<br>
-        Metro de Medellín</p>
-    </div>
-  </div>
+// ── MAP ──
+var map = L.map('map', { zoomControl: false, attributionControl: true }).setView([6.245, -75.575], 13);
+L.control.zoom({ position: 'topright' }).addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> · <a href="https://carto.com/">CARTO</a>',
+  subdomains: 'abcd', maxZoom: 19
+}).addTo(map);
+
+/**
+ * POPUP POSITIONING FIX:
+ * After popup opens, check if it overflows the map container.
+ * Run the check multiple times: immediately, after a short delay (for layout),
+ * and after images load (which changes popup height significantly).
+ */
+function ensurePopupVisible() {
+  var mapContainer = map.getContainer();
+  var popupEl = mapContainer.querySelector('.leaflet-popup');
+  if (!popupEl) return;
+
+  var mapRect = mapContainer.getBoundingClientRect();
+  var popupRect = popupEl.getBoundingClientRect();
+
+  var panX = 0;
+  var panY = 0;
+  var pad = 15;
+
+  if (popupRect.top < mapRect.top + pad) {
+    panY = popupRect.top - mapRect.top - pad;
+  }
+  if (popupRect.bottom > mapRect.bottom - pad) {
+    panY = popupRect.bottom - mapRect.bottom + pad;
+  }
+  if (popupRect.left < mapRect.left + pad) {
+    panX = popupRect.left - mapRect.left - pad;
+  }
+  if (popupRect.right > mapRect.right - pad) {
+    panX = popupRect.right - mapRect.right + pad;
+  }
+
+  if (panX !== 0 || panY !== 0) {
+    map.panBy([panX, panY], { animate: true, duration: 0.35 });
+  }
+}
+
+map.on('popupopen', function(e) {
+  // Check 1: immediate (text-only height)
+  setTimeout(ensurePopupVisible, 50);
+  // Check 2: after image likely loads (changes popup height)
+  setTimeout(ensurePopupVisible, 400);
+  // Check 3: safety net for slow connections
+  setTimeout(ensurePopupVisible, 900);
+
+  // Also listen for the image load event inside this popup
+  var popupEl = e.popup.getElement();
+  if (popupEl) {
+    var img = popupEl.querySelector('.popup-image-wrap img');
+    if (img) {
+      img.addEventListener('load', function() {
+        setTimeout(ensurePopupVisible, 50);
+      }, { once: true });
+    }
+  }
+});
+
+var markers = {};
+var IW = 36, IH = 50;
+
+virgenes.forEach(function(v) {
+  var pUrl = PROC + '/' + v.iP;
+  var oUrl = ORIG + '/' + v.iO;
+
+  var icon = L.divIcon({
+    className: '',
+    html: '<div class="virgin-icon-marker" style="width:'+IW+'px;height:'+IH+'px;">' +
+            '<img src="'+pUrl+'" alt="'+v.est+'" loading="lazy" ' +
+            'onerror="this.parentElement.style.background=\'#ccc\';this.style.display=\'none\';">' +
+          '</div>',
+    iconSize: [IW, IH],
+    iconAnchor: [IW/2, IH/2],
+    popupAnchor: [0, -(IH/2 + 6)]
+  });
+
+  var popupHtml =
+    '<div class="popup-image-wrap">' +
+      '<img src="'+oUrl+'" alt="'+v.tit+'" ' +
+      'onclick="openLightbox(\''+oUrl+'\')" loading="lazy" ' +
+      'onerror="this.style.display=\'none\';this.parentElement.style.display=\'none\';">' +
+    '</div>' +
+    '<div class="popup-inner">' +
+      '<div class="popup-station">'+v.est+' · '+v.y+'</div>' +
+      '<div class="popup-title">'+v.tit+'</div>' +
+      '<div class="popup-meta"><strong>'+v.art+'</strong><br>'+v.tec+'</div>' +
+      (v.det ? '<div class="popup-detail">'+v.det+'</div>' : '') +
+    '</div>';
+
+  var marker = L.marker([v.lat, v.lng], { icon: icon })
+    .addTo(map)
+    .bindPopup(popupHtml, {
+      closeButton: true, maxWidth: 300, minWidth: 280,
+      autoPan: false // We handle panning ourselves via popupopen
+    });
+
+  markers[v.id] = marker;
+});
+
+// ── GRID ──
+var grid = document.getElementById('virgin-grid');
+virgenes.forEach(function(v) {
+  var pUrl = PROC + '/' + v.iP;
+  var card = document.createElement('div');
+  card.className = 'virgin-card';
+  card.innerHTML =
+    '<div class="card-thumb">' +
+      '<img src="'+pUrl+'" alt="'+v.est+'" loading="lazy" onerror="this.style.display=\'none\';">' +
+    '</div>' +
+    '<div class="card-info">' +
+      '<span class="card-year">'+v.y+'</span>' +
+      '<div class="card-station">'+v.est+'</div>' +
+      '<div class="card-title">'+v.tit+'</div>' +
+      '<div class="card-artist">'+v.art+' · '+v.tec+'</div>' +
+    '</div>';
+  card.addEventListener('click', (function(v) {
+    return function() {
+      document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(function() {
+        map.setView([v.lat, v.lng], 15, { animate: true });
+        setTimeout(function() { markers[v.id].openPopup(); }, 500);
+      }, 350);
+    };
+  })(v));
+  grid.appendChild(card);
+});
+</script>
 </body>
 </html>
